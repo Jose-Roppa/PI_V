@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Steak Store - Painel Administrativo</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fa; margin: 0; padding: 0; }
+    .header { background: #2d2d2d; color: #fff; padding: 24px 0 16px 0; text-align: center; box-shadow: 0 2px 8px #0002; }
+    .header-logo { font-size: 2.2em; font-weight: bold; letter-spacing: 2px; color: #ff7043; }
+    .header-desc { font-size: 1.1em; color: #fff; margin-top: 6px; }
+    .container { max-width: 1000px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px #0001; padding: 36px 36px 24px 36px; }
+    h1 { color: #222; margin-bottom: 0; }
+    .add-btn { display: inline-block; margin-bottom: 24px; padding: 12px 22px; background: #ff7043; color: #fff; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 1.1em; transition: background 0.2s; }
+    .add-btn:hover { background: #e64a19; }
+    .loja-card { background: #f8f9fb; border-radius: 8px; margin-bottom: 28px; padding: 22px 28px; box-shadow: 0 1px 6px #0001; display: flex; align-items: flex-start; }
+    .loja-info { flex: 1; }
+    .loja-img { margin-left: 36px; }
+    .loja-img img { border-radius: 8px; max-width: 180px; max-height: 180px; box-shadow: 0 1px 8px #0002; }
+    .edit-btn { display: inline-block; margin-top: 12px; padding: 7px 18px; background: #2d2d2d; color: #fff; border-radius: 4px; text-decoration: none; font-size: 15px; font-weight: bold; transition: background 0.2s; }
+    .edit-btn:hover { background: #ff7043; color: #fff; }
+    .delete-btn { display: inline-block; margin-top: 12px; margin-left: 10px; padding: 7px 18px; background: #e53935; color: #fff; border-radius: 4px; text-decoration: none; font-size: 15px; font-weight: bold; border: none; cursor: pointer; transition: background 0.2s; }
+    .delete-btn:hover { background: #b71c1c; }
+    .loja-title { font-size: 1.25em; font-weight: bold; color: #222; }
+    .loja-tipo { font-size: 1em; color: #ff7043; margin-left: 8px; font-weight: bold; }
+    .loja-label { color: #888; font-weight: bold; }
+    .dashboard-info { background: #fff3e0; border: 1px solid #ffe0b2; border-radius: 8px; padding: 18px 24px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; }
+    .dashboard-info .left { font-size: 1.1em; }
+    .dashboard-info .right { font-size: 1.1em; color: #ff7043; font-weight: bold; }
+    .footer { text-align: center; color: #aaa; font-size: 1em; margin-top: 40px; padding: 18px 0 10px 0; }
+    @media (max-width: 700px) {
+      .container { padding: 10px; }
+      .loja-card { flex-direction: column; }
+      .loja-img { margin-left: 0; margin-top: 16px; }
+      .dashboard-info { flex-direction: column; gap: 10px; }
+    }
+  </style>
+  <script>
+    function confirmDelete(lojaId, lojaNome) {
+      if (confirm('Tem certeza que deseja remover a loja "' + lojaNome + '"?')) {
+        document.getElementById('delete-form-' + lojaId).submit();
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="header">
+    <div class="header-logo">Steak Store</div>
+    <div class="header-desc">Painel Administrativo de Lojas e Bots</div>
+  </div>
+  <div class="container">
+    <div class="dashboard-info">
+      <div class="left">
+        <b>Total de Lojas:</b> {{ lojas|length }}<br>
+        <b>Gerencie seus bots e lojas de forma centralizada.</b>
+      </div>
+      <div class="right">
+        <span>Bem-vindo ao sistema Steak Store!</span>
+      </div>
+    </div>
+    <a href="{{ url_for('add_loja') }}" class="add-btn">+ Adicionar Loja</a>
+    {% if lojas|length == 0 %}
+      <p style="color:#888; font-size:1.1em; margin-top:32px;">Nenhuma loja cadastrada ainda. Clique em <b>Adicionar Loja</b> para começar.</p>
+    {% endif %}
+    {% for loja in lojas %}
+      <div class="loja-card">
+        <div class="loja-info">
+          <div class="loja-title">{{ loja.nome }} <span class="loja-tipo">({{ loja.tipo|capitalize }})</span></div>
+          <div><span class="loja-label">Instância Z-API:</span> {{ loja.zapi_instance }}</div>
+          <div><span class="loja-label">Grupo de Aviso:</span> {{ loja.grupo_aviso }}</div>
+          <div><span class="loja-label">Horário:</span> {{ loja.horario }}</div>
+          <div><span class="loja-label">Endereço:</span> {{ loja.endereco }}</div>
+          <div><span class="loja-label">Menu/Catálogo:</span> {{ loja.menu|join(', ') }}</div>
+          <div><span class="loja-label">URL da Instância Z-API:</span> {{ loja.zapi_url }}</div>
+          <div style="margin-top: 10px;">
+            <a href="{{ url_for('edit_loja', id=loja.id) }}" class="edit-btn">Editar</a>
+            <form id="delete-form-{{ loja.id }}" action="{{ url_for('delete_loja', id=loja.id) }}" method="post" style="display:inline;">
+              <button type="button" class="delete-btn" onclick="confirmDelete('{{ loja.id }}', '{{ loja.nome }}')">Remover</button>
+            </form>
+          </div>
+        </div>
+        {% if loja.menu_img %}
+        <div class="loja-img">
+          <img src="{{ url_for('static', filename=loja.menu_img) }}" alt="Cardápio da loja">
+        </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="footer">
+    Steak Store &copy; {{ 2024 }} &mdash; Sistema de Gestão de Bots e Lojas
+  </div>
+</body>
+</html> 

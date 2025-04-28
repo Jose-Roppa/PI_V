@@ -1,0 +1,21 @@
+{
+  "lojas": [
+    {
+      "id": "1",
+      "nome": "NOME_DA_LOJA",
+      "zapi_instance": "SEU_INSTANCE_ID_AQUI",
+      "zapi_url": "URL_DA_INSTANCIA_ZAPI_AQUI",
+      "grupo_aviso": "ID_DO_GRUPO_AQUI",
+      "connected_phone": "NUMERO_DO_BOT_AQUI",
+      "tipo": "TIPO_DE_LOJA",
+      "horario": "HORARIO_FUNCIONAMENTO",
+      "endereco": "ENDERECO_DA_LOJA",
+      "menu": [
+        "ITEM1",
+        "ITEM2",
+        "ITEM3"
+      ],
+      "menu_img": "menus/EXEMPLO.jpg"
+    }
+  ]
+}

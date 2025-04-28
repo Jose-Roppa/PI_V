@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Loja - Steak Store</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Arial, sans-serif; 
+      background: #f4f6fa; 
+      margin: 0; 
+      padding: 0; 
+      color: #333;
+    }
+    .header { 
+      background: #2d2d2d; 
+      color: #fff; 
+      padding: 24px 0 16px 0; 
+      text-align: center; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .header-logo { 
+      font-size: 2.2em; 
+      font-weight: bold; 
+      letter-spacing: 2px; 
+      color: #ff7043;
+    }
+    .header-desc { 
+      font-size: 1.1em; 
+      color: #fff; 
+      margin-top: 6px;
+    }
+    .container { 
+      max-width: 800px; 
+      margin: 40px auto; 
+      background: #fff; 
+      border-radius: 10px; 
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1); 
+      padding: 40px; 
+    }
+    h1 { 
+      color: #ff7043; 
+      margin-bottom: 30px; 
+      text-align: center; 
+      font-size: 2em;
+    }
+    form { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 24px;
+    }
+    .form-section {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-weight: bold;
+      color: #444;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+    label { 
+      font-weight: 600; 
+      color: #333; 
+      margin-bottom: 8px; 
+      display: block;
+    }
+    input[type="text"], select { 
+      width: 100%;
+      padding: 12px; 
+      border-radius: 8px; 
+      border: 1px solid #ddd; 
+      font-size: 1em;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus, select:focus {
+      border-color: #ff7043;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(255,112,67,0.2);
+    }
+    input[type="file"] { 
+      background: #f8f9fb; 
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px dashed #ccc;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .form-row { 
+      display: flex; 
+      gap: 24px; 
+      margin-bottom: 6px;
+    }
+    .form-row > div { 
+      flex: 1; 
+    }
+    .submit-btn { 
+      background: #ff7043; 
+      color: #fff; 
+      border: none; 
+      border-radius: 8px; 
+      padding: 16px 0; 
+      font-size: 1.2em; 
+      font-weight: bold; 
+      cursor: pointer; 
+      transition: background 0.2s; 
+      margin-top: 10px;
+    }
+    .submit-btn:hover { 
+      background: #e64a19; 
+    }
+    .back-link { 
+      display: inline-block; 
+      margin-top: 25px; 
+      color: #666; 
+      text-decoration: none; 
+      font-size: 1.1em; 
+      transition: color 0.2s;
+    }
+    .back-link:hover { 
+      color: #ff7043; 
+    }
+    .tip { 
+      color: #888; 
+      font-size: 0.9em; 
+      margin-top: 4px; 
+      display: block;
+    }
+    .current-image {
+      margin-top: 15px;
+      border-radius: 8px;
+      max-width: 100%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    @media (max-width: 768px) {
+      .container { 
+        padding: 20px;
+        margin: 20px;
+        width: auto; 
+      }
+      .form-row { 
+        flex-direction: column; 
+        gap: 15px; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-logo">Steak Store</div>
+    <div class="header-desc">Sistema de Gestão de Bots e Lojas</div>
+  </div>
+  <div class="container">
+    <h1>Editar Loja</h1>
+    <form method="post" enctype="multipart/form-data">
+      <!-- Informações Básicas -->
+      <div class="form-section">
+        <div class="section-title">Informações Básicas</div>
+        <div class="form-row">
+          <div>
+            <label>Nome da Loja</label>
+            <input name="nome" type="text" value="{{ loja.nome }}" placeholder="Ex: Steak Store Morumbi" required>
+          </div>
+          <div>
+            <label>Tipo de Estabelecimento</label>
+            <select name="tipo" required>
+              <option value="">Selecione...</option>
+              <option value="restaurante" {% if loja.tipo == 'restaurante' %}selected{% endif %}>Restaurante</option>
+              <option value="boutique" {% if loja.tipo == 'boutique' %}selected{% endif %}>Boutique</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Integração Z-API -->
+      <div class="form-section">
+        <div class="section-title">Integração Z-API</div>
+        <div class="form-row">
+          <div>
+            <label>ID da Instância</label>
+            <input name="zapi_instance" type="text" value="{{ loja.zapi_instance }}" placeholder="Ex: ABC123" required>
+            <span class="tip">Identificador único da instância no Z-API</span>
+          </div>
+          <div>
+            <label>URL da Instância Z-API</label>
+            <input name="zapi_url" type="text" value="{{ loja.zapi_url }}" placeholder="https://api.z-api.io/instances/SEU_INSTANCE/token/SEU_TOKEN" required>
+            <span class="tip">URL completa da API para esta instância</span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Grupo de Aviso</label>
+            <input name="grupo_aviso" type="text" value="{{ loja.grupo_aviso }}" placeholder="Ex: 5511999999999-grupo" required>
+            <span class="tip">ID do grupo para avisos no WhatsApp</span>
+          </div>
+          <div>
+            <label>Número do WhatsApp do Bot</label>
+            <input name="connected_phone" type="text" value="{{ loja.connected_phone }}" placeholder="5511999999999" required>
+            <span class="tip">Número usado pelo bot (sem espaços ou símbolos)</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Dados do Estabelecimento -->
+      <div class="form-section">
+        <div class="section-title">Dados do Estabelecimento</div>
+        <div class="form-row">
+          <div>
+            <label>Horário de Funcionamento</label>
+            <input name="horario" type="text" value="{{ loja.horario }}" placeholder="Ex: Seg-Sex: 9h às 18h | Sáb: 9h às 15h" required>
+          </div>
+          <div>
+            <label>Endereço</label>
+            <input name="endereco" type="text" value="{{ loja.endereco }}" placeholder="Ex: Rua Exemplo, 123 - Bairro" required>
+          </div>
+        </div>
+        <div>
+          <label>Menu/Catálogo</label>
+          <input name="menu" type="text" value="{{ loja.menu|join(', ') }}" placeholder="Ex: Pizza, Hambúrguer, Salada, Refrigerante" required>
+          <span class="tip">Separe os itens por vírgula</span>
+        </div>
+      </div>
+      
+      <!-- Imagem do Cardápio -->
+      <div class="form-section">
+        <div class="section-title">Material de Apoio</div>
+        <div>
+          <label>Imagem do Cardápio/Catálogo</label>
+          <input type="file" name="menu_img" accept="image/*">
+          <span class="tip">Formato recomendado: JPG ou PNG, tamanho máximo: 5MB</span>
+          {% if loja.menu_img %}
+            <div style="margin-top: 15px;">
+              <p>Imagem atual:</p>
+              <img src="{{ url_for('static', filename=loja.menu_img) }}" class="current-image" style="max-width: 300px;">
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      
+      <button type="submit" class="submit-btn">Salvar Alterações</button>
+    </form>
+    <a href="/" class="back-link">&larr; Voltar ao painel</a>
+  </div>
+</body>
+</html> 
