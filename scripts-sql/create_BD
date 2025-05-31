@@ -1,0 +1,90 @@
+USE [RestauranteDB] 
+GO
+
+-- ===========================
+-- 1. TABELA DE RESTAURANTES
+-- ===========================
+DROP TABLE IF EXISTS [dbo].[restaurantes]
+GO
+
+CREATE TABLE [dbo].[restaurantes] (
+	[id] INT IDENTITY(1,1) PRIMARY KEY,
+	[nome] NVARCHAR(100) NOT NULL,
+	[endereco] NVARCHAR(255) NOT NULL,
+	[descricao] NVARCHAR(MAX) NULL
+)
+GO
+
+INSERT INTO [dbo].[restaurantes] (nome, endereco, descricao) VALUES
+('La Tavola', 'Rua Itália, 101 - Campinas/SP', 'Trattoria italiana tradicional com massas artesanais e vinhos selecionados.'),
+('Sahara Sabores', 'Av. Oriente Médio, 222 - Campinas/SP', 'Experiência gastronômica árabe com pratos típicos e ambiente acolhedor.'),
+('Tempero da Terra', 'Rua Brasil, 303 - Campinas/SP', 'Culinária brasileira com ingredientes frescos e receitas regionais.')
+GO
+
+-- ===================
+-- 2. TABELA DE PRATOS
+-- ===================
+DROP TABLE IF EXISTS [dbo].[pratos]
+GO
+
+CREATE TABLE [dbo].[pratos] (
+	[id] INT IDENTITY(1,1) PRIMARY KEY,
+	[restaurante_id] INT NOT NULL FOREIGN KEY REFERENCES [dbo].[restaurantes](id),
+	[nome_prato] NVARCHAR(100) NOT NULL,
+	[descricao] NVARCHAR(255) NOT NULL,
+	[imagem_png] NVARCHAR(255) NOT NULL
+)
+GO
+
+INSERT INTO [dbo].[pratos] (restaurante_id, nome_prato, descricao, imagem_png) VALUES
+(1, 'Spaghetti alla Carbonara', 'Massa italiana com molho cremoso de ovos, queijo parmesão e pancetta.', 'imagens/spaghetti_carbonara.png'),
+(1, 'Lasagna alla Bolognese', 'Camadas de massa fresca com ragu de carne, molho bechamel e parmesão.', 'imagens/lasagna_bolognese.png'),
+(1, 'Risotto ai Funghi', 'Risoto cremoso com cogumelos frescos e toque de vinho branco.', 'imagens/risotto_funghi.png')
+GO
+
+-- ===================
+-- 3. TABELA DE PEDIDOS
+-- ===================
+DROP TABLE IF EXISTS [dbo].[pedidos]
+GO
+
+CREATE TABLE [dbo].[pedidos] (
+	[id] INT IDENTITY(1,1) PRIMARY KEY,
+	[nome_cliente] NVARCHAR(100) NOT NULL,
+	[telefone] VARCHAR(20) NOT NULL,
+	[restaurante_id] INT NOT NULL FOREIGN KEY REFERENCES [dbo].[restaurantes](id),
+	[prato_id] INT NOT NULL FOREIGN KEY REFERENCES [dbo].[pratos](id),
+	[observacao] NVARCHAR(MAX) NULL,
+	[endereco_entrega] NVARCHAR(255) NOT NULL
+)
+GO
+
+-- ===============================
+-- 4. TABELA DE MENSAGENS WHATSAPP
+-- ===============================
+DROP TABLE IF EXISTS [dbo].[mensagens_whatsapp]
+GO
+
+CREATE TABLE [dbo].[mensagens_whatsapp] (
+	[id] INT IDENTITY(1,1) PRIMARY KEY,
+	[isStatusReply] BIT NULL,
+	[waitingMessage] BIT NULL,
+	[isEdit] BIT NULL,
+	[isGroup] BIT NULL,
+	[isNewsletter] BIT NULL,
+	[fromMe] BIT NULL,
+	[momment] BIGINT NULL,
+	[senderPhoto] NVARCHAR(MAX) NULL,
+	[photo] NVARCHAR(MAX) NULL,
+	[broadcast] BIT NULL,
+	[forwarded] BIT NULL,
+	[fromApi] BIT NULL,
+	[text] NVARCHAR(MAX) NULL,
+	[audioUrl] NVARCHAR(MAX) NULL,
+	[audioDuration] INT NULL,
+	[reactionTime] BIGINT NULL,
+	[messageId] NVARCHAR(255) NOT NULL,
+	[datahora] AS (DATEADD(SECOND, CONVERT(BIGINT, [momment]), '1970-01-01 00:00:00')),
+	CONSTRAINT [UQ_mensagens_whatsapp_messageId] UNIQUE NONCLUSTERED ([messageId] ASC)
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO

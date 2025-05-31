@@ -16,6 +16,23 @@
         "ITEM3"
       ],
       "menu_img": "menus/EXEMPLO.jpg"
+    },
+    {
+      "id": "2",
+      "nome": "La Tavola",
+      "zapi_instance": "3E209718115400F0FC0762AF4B231A0B",
+      "zapi_url": "https://api.z-api.io/instances/3E209718115400F0FC0762AF4B231A0B/token/2D9894CA17062072E77F4478/send-text",
+      "grupo_aviso": "19989479817",
+      "connected_phone": "19989479816",
+      "tipo": "restaurante",
+      "horario": "Seg-Sex: 9h às 18h | Sáb: 9h às 15h",
+      "endereco": "Rua das Flores, 123 - Jardim Primavera, Campinas/SP",
+      "menu": [
+        "Spaghetti alla Carbonara",
+        "Lasagna alla Bolognese",
+        "Risotto ai Funghi"
+      ],
+      "menu_img": "menus/cardapioPIV.png"
     }
   ]
 }
